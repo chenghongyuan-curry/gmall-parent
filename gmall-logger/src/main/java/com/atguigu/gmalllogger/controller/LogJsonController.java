@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class LogJsonController {
 
     @Autowired
-    KafkaTemplate<String,String> kafkaTemplate;
+    KafkaTemplate<String, String> kafkaTemplate;
 
 
     @PostMapping("/log")
@@ -33,10 +33,10 @@ public class LogJsonController {
         log.info(logString);
 
         //推送到kafka
-        if("startup".equals(jsonObject.getString("type"))){
-            kafkaTemplate.send(GmallConstants.KAFKA_TOPIC_STARTUP,jsonString);
-        }else{
-            kafkaTemplate.send(GmallConstants.KAFKA_TOPIC_EVENT,jsonString);
+        if ("startup".equals(jsonObject.getString("type"))) {
+            kafkaTemplate.send(GmallConstants.KAFKA_TOPIC_STARTUP, jsonString);
+        } else {
+            kafkaTemplate.send(GmallConstants.KAFKA_TOPIC_EVENT, jsonString);
         }
 
 
