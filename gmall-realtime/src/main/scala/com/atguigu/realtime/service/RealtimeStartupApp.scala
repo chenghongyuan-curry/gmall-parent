@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON
 import com.atguigu.common.constants.GmallConstants
 import com.atguigu.realtime.bean.StartUpLog
 import com.atguigu.realtime.util.{MykafkaUtil, RedesUtil}
+import org.apache.hadoop.conf.Configuration
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.spark.SparkConf
 import org.apache.spark.broadcast.Broadcast
@@ -15,6 +16,8 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.{DStream, InputDStream}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import redis.clients.jedis.Jedis
+import org.apache.spark.SparkContext
+import org.apache.phoenix.spark._
 
 
 /**
@@ -45,6 +48,7 @@ object RealtimeStartupApp {
             startupLog.logHour = dateStrings(1)
             startupLog
         }
+        startupLogDStream.cache()
         startupLogDStream.print()
 
 
@@ -109,6 +113,12 @@ object RealtimeStartupApp {
             }
 
         }
+
+        //TODO 6、通过phoenix写入hbase
+        startuplogFlatMap.foreachRDD{rdd=>{
+            rdd.saveToPhoenix("GMALL_DAU",Seq("MID", "UID", "APPID", "AREA", "OS", "CH", "TYPE", "VS", "LOGDATE", "LOGHOUR", "TS"),new Configuration,Some("hadoop102,hadoop103,hadoop104:2181"))
+        }}
+
 
         ssc.start()
         ssc.awaitTermination()
