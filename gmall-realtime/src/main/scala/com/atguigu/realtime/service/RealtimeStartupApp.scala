@@ -7,7 +7,7 @@ import java.util.Date
 import com.alibaba.fastjson.JSON
 import com.atguigu.common.constants.GmallConstants
 import com.atguigu.realtime.bean.StartUpLog
-import com.atguigu.realtime.util.{MykafkaUtil, RedesUtil}
+import com.atguigu.realtime.util.{MykafkaUtil, RedisUtil}
 import org.apache.hadoop.conf.Configuration
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.spark.SparkConf
@@ -54,7 +54,7 @@ object RealtimeStartupApp {
 
         //TODO 3、利用用户清单进行过滤 去重  只保留清单中不存在的用户访问记录
         val filterStartupLogDStream: DStream[StartUpLog] = startupLogDStream.transform { rdd =>
-            val jedisClient: Jedis = RedesUtil.getJedisClient
+            val jedisClient: Jedis = RedisUtil.getJedisClient
 
             //得到当前时间日期
             val date: Date = new Date()
@@ -101,7 +101,7 @@ object RealtimeStartupApp {
         //TODO 5、保存今日访问过的用户(mid)清单   -->Redis    1 key类型 ： set    2 key ： dau:2019-xx-xx   3 value : mid
         startuplogFlatMap.foreachRDD{rdd=>
             rdd.foreachPartition{startuplogItr=>
-                val jedisClient: Jedis = RedesUtil.getJedisClient
+                val jedisClient: Jedis = RedisUtil.getJedisClient
 
                 for (startuplog <- startuplogItr) {
                     val key: String = "dau:" + startuplog.logDate

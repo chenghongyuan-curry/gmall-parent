@@ -2,6 +2,7 @@ package com.atguigu.mock.log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.mock.bean.LogUploader;
 import com.atguigu.mock.util.RanOpt;
 import com.atguigu.mock.util.RandomDate;
 import com.atguigu.mock.util.RandomNum;
@@ -45,7 +46,7 @@ public class JsonMocker {
     RandomOptionGroup<String> vsOptionGroup = new RandomOptionGroup(vsOpts);
 
     RanOpt[] eventOpts = {new RanOpt("addFavor", 10), new RanOpt("addComment", 30),
-            new RanOpt("addCart", 20), new RanOpt("clickItem", 40)
+            new RanOpt("addCart", 20), new RanOpt("clickItem", 2),new RanOpt("coupon", 45)
     };
 
     RandomOptionGroup<String> eventOptionGroup = new RandomOptionGroup(eventOpts);
@@ -126,8 +127,8 @@ public class JsonMocker {
      `area` string COMMENT '城市' */
 
 
-        String mid = "mid_" + RandomNum.getRandInt(1, 1500);
-        String uid = "" + RandomNum.getRandInt(1, 500);
+        String mid = "mid_" + RandomNum.getRandInt(1, 100);
+        String uid = "" + RandomNum.getRandInt(1, 2000);
         String os = osOptionGroup.getRandomOpt().getValue();
         String appid = this.appId;
         String area = areaOptionGroup.getRandomOpt().getValue();
@@ -159,7 +160,7 @@ public class JsonMocker {
                 jsonMocker.sendLog(eventLog);
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

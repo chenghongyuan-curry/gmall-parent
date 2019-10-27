@@ -1,4 +1,4 @@
-package com.atguigu.mock.log;
+package com.atguigu.mock.bean;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
